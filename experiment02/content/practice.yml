@@ -1,0 +1,46 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  Practice details. These appear on every page: the header, footer and the
+#  "Call us" boxes. Change something here and it changes everywhere.
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Richmond Family Medicine
+tagline: Independent family medicine in Richmond, Vermont
+
+# A banner across the top of every page, for closures and other news.
+# Example: announcement: "We're closed Thursday, November 26 for Thanksgiving."
+# Leave the quotes empty for no banner.
+announcement: ""
+
+phone: 802-434-4123
+fax: 802-434-3130
+
+street: 30 West Main Street
+town: Richmond, VT 05477
+map: https://goo.gl/maps/i71S
+
+hours:
+  - days: Monday – Friday
+    time: 8:00 am – 5:00 pm
+  - days: Saturday
+    time: 9:00 am – noon
+  - days: Sunday
+    time: Closed
+
+after-hours: A doctor or nurse practitioner is available by telephone after hours for urgent medical issues.
+
+patient-portal: https://www.medentmobile.com/portal/index.php?practice_id=7C38CDs8
+facebook: https://www.facebook.com/richmondfamilymedicine
+
+# Used by search engines and when the site is shared.
+website: https://richmondfamilymedicine.org/
+description: Richmond Family Medicine provides comprehensive medical care for people of all ages, with an emphasis on evidence-based, preventive medicine and acute and chronic disease management.
+
+# The menus across the top. Each one lists the pages in a folder of content/,
+# in the order set by `order:` at the top of each page.
+menus:
+  - label: Who We Are
+    folder: who-we-are
+  - label: Medical Services
+    folder: medical-services
+  - label: Patient Resources
+    folder: patient-resources

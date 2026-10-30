@@ -1,0 +1,138 @@
+# Pages CMS settings (https://pagescms.org): a web editor for the Richmond Family Medicine site
+# in experiment02/. Saving in the editor commits the change to GitHub; the site is then rebuilt
+# from it (see experiment02/README.md). Each section of the site is its own folder of pages,
+# with its photos in an images/ folder beside them.
+
+media:
+  - { name: home, label: Home page photos, input: experiment02/content/home/images, output: images, extensions: [jpg, jpeg, png, webp] }
+  - { name: who-we-are, label: Who We Are photos, input: experiment02/content/who-we-are/images, output: images, extensions: [jpg, jpeg, png, webp] }
+  - { name: medical-services, label: Medical Services photos, input: experiment02/content/medical-services/images, output: images, extensions: [jpg, jpeg, png, webp] }
+  - { name: patient-resources, label: Patient Resources photos, input: experiment02/content/patient-resources/images, output: images, extensions: [jpg, jpeg, png, webp] }
+  - { name: clinicians, label: Clinician photos, input: experiment02/content/clinicians/images, output: images, extensions: [jpg, jpeg, png, webp] }
+  - { name: forms, label: Forms (PDF), input: experiment02/content/patient-resources/files/forms, output: files/forms, extensions: [pdf] }
+  - { name: handouts, label: Handouts (PDF), input: experiment02/content/patient-resources/files/handouts, output: files/handouts, extensions: [pdf] }
+  - { name: well-child, label: Well-child forms (PDF), input: experiment02/content/patient-resources/files/well-child, output: files/well-child, extensions: [pdf] }
+
+content:
+  - name: who-we-are
+    label: Who We Are
+    type: collection
+    path: experiment02/content/who-we-are
+    format: yaml-frontmatter
+    view: { fields: [title, order], primary: title, sort: [order, title] }
+    fields:
+      - { name: photo, label: Photo, type: image, options: { media: who-we-are } }
+      - { name: title, label: Title, type: string, required: true, description: "The web address comes from the file name, set when the page is created." }
+      - { name: menu-title, label: Short title, type: string, description: "Optional. A shorter name for menus and cards." }
+      - { name: summary, label: Summary, type: text, description: "One sentence shown under the title, on cards, and in search results." }
+      - { name: icon, label: Icon, type: select, description: "Shown on the page's card.", options: { values: [clipboard, smile, heart, message, plus, activity, apple, mountain, file, book, info, link, lock, shield, thermometer, bug, users, award, briefcase, home, phone, pin, clock] } }
+      - { name: photo-description, label: Photo description, type: string, description: "What the photo shows, for people using screen readers." }
+      - { name: order, label: Order in the menu, type: number, description: "1 comes first." }
+      - { name: style, label: Layout, type: select, description: "Cards turns each ### heading into a card (used on Forms and Websites We Trust).", options: { values: [cards] } }
+      - { name: body, label: Text, type: code, description: "The page, in Markdown. Tips are in experiment02/README.md.", options: { format: markdown } }
+
+  - name: medical-services
+    label: Medical Services
+    type: collection
+    path: experiment02/content/medical-services
+    format: yaml-frontmatter
+    view: { fields: [title, order], primary: title, sort: [order, title] }
+    fields:
+      - { name: photo, label: Photo, type: image, options: { media: medical-services } }
+      - { name: title, label: Title, type: string, required: true, description: "The web address comes from the file name, set when the page is created." }
+      - { name: menu-title, label: Short title, type: string, description: "Optional. A shorter name for menus and cards." }
+      - { name: summary, label: Summary, type: text, description: "One sentence shown under the title, on cards, and in search results." }
+      - { name: icon, label: Icon, type: select, description: "Shown on the page's card.", options: { values: [clipboard, smile, heart, message, plus, activity, apple, mountain, file, book, info, link, lock, shield, thermometer, bug, users, award, briefcase, home, phone, pin, clock] } }
+      - { name: photo-description, label: Photo description, type: string, description: "What the photo shows, for people using screen readers." }
+      - { name: order, label: Order in the menu, type: number, description: "1 comes first." }
+      - { name: style, label: Layout, type: select, description: "Cards turns each ### heading into a card (used on Forms and Websites We Trust).", options: { values: [cards] } }
+      - { name: body, label: Text, type: code, description: "The page, in Markdown. Tips are in experiment02/README.md.", options: { format: markdown } }
+
+  - name: patient-resources
+    label: Patient Resources
+    type: collection
+    path: experiment02/content/patient-resources
+    format: yaml-frontmatter
+    view: { fields: [title, order], primary: title, sort: [order, title] }
+    fields:
+      - { name: photo, label: Photo, type: image, options: { media: patient-resources } }
+      - { name: title, label: Title, type: string, required: true, description: "The web address comes from the file name, set when the page is created." }
+      - { name: menu-title, label: Short title, type: string, description: "Optional. A shorter name for menus and cards." }
+      - { name: summary, label: Summary, type: text, description: "One sentence shown under the title, on cards, and in search results." }
+      - { name: icon, label: Icon, type: select, description: "Shown on the page's card.", options: { values: [clipboard, smile, heart, message, plus, activity, apple, mountain, file, book, info, link, lock, shield, thermometer, bug, users, award, briefcase, home, phone, pin, clock] } }
+      - { name: photo-description, label: Photo description, type: string, description: "What the photo shows, for people using screen readers." }
+      - { name: order, label: Order in the menu, type: number, description: "1 comes first." }
+      - { name: style, label: Layout, type: select, description: "Cards turns each ### heading into a card (used on Forms and Websites We Trust).", options: { values: [cards] } }
+      - { name: body, label: Text, type: code, description: "The page, in Markdown. Tips are in experiment02/README.md.", options: { format: markdown } }
+
+  - name: health-topics
+    label: Common Questions
+    type: collection
+    path: experiment02/content/health-topics
+    format: yaml-frontmatter
+    view: { fields: [title, order], primary: title, sort: [order, title] }
+    fields:
+      - { name: title, label: Title, type: string, required: true, description: "The web address comes from the file name, set when the page is created." }
+      - { name: menu-title, label: Short title, type: string, description: "Optional. A shorter name for menus and cards." }
+      - { name: summary, label: Summary, type: text, description: "One sentence shown under the title, on cards, and in search results." }
+      - { name: icon, label: Icon, type: select, description: "Shown on the page's card.", options: { values: [clipboard, smile, heart, message, plus, activity, apple, mountain, file, book, info, link, lock, shield, thermometer, bug, users, award, briefcase, home, phone, pin, clock] } }
+      - { name: photo-description, label: Photo description, type: string, description: "What the photo shows, for people using screen readers." }
+      - { name: order, label: Order in the menu, type: number, description: "1 comes first." }
+      - { name: style, label: Layout, type: select, description: "Cards turns each ### heading into a card (used on Forms and Websites We Trust).", options: { values: [cards] } }
+      - { name: body, label: Text, type: code, description: "The page, in Markdown. Tips are in experiment02/README.md.", options: { format: markdown } }
+
+  - name: clinicians
+    label: Doctors & NPs
+    type: collection
+    path: experiment02/content/clinicians
+    format: yaml-frontmatter
+    view: { fields: [name, credentials, type], primary: name, sort: [order, name] }
+    fields:
+      - { name: name, label: Name, type: string, required: true }
+      - { name: credentials, label: Credentials, type: string, description: "e.g. MD, or MSN, FNP" }
+      - { name: role, label: Role, type: string, description: "e.g. Family Nurse Practitioner" }
+      - name: type
+        label: Type
+        type: select
+        required: true
+        options:
+          values: [physician, nurse practitioner, consultant]
+      - { name: order, label: Order, type: number, description: "Position in the lists (1 comes first)." }
+      - { name: photo, label: Photo, type: image, options: { media: clinicians }, description: "A portrait. Without one, the clinician's initials are shown." }
+      - { name: education, label: Education & training, type: string, list: true, description: "One line each, e.g. Doctor of Medicine — University of Vermont College of Medicine" }
+      - { name: body, label: Biography, type: code, options: { format: markdown } }
+
+  - name: practice
+    label: Practice details
+    type: file
+    path: experiment02/content/practice.yml
+    format: yaml
+    fields:
+      - { name: name, label: Practice name, type: string }
+      - { name: tagline, label: Tagline, type: string }
+      - { name: announcement, label: Announcement banner, type: text, description: "Shown across the top of every page, e.g. a holiday closure. Leave empty for none." }
+      - { name: phone, label: Phone, type: string }
+      - { name: fax, label: Fax, type: string }
+      - { name: street, label: Street, type: string }
+      - { name: town, label: Town, type: string }
+      - { name: map, label: Map link, type: string }
+      - name: hours
+        label: Office hours
+        type: object
+        list: true
+        fields:
+          - { name: days, label: Days, type: string }
+          - { name: time, label: Hours, type: string, description: "e.g. 8:00 am – 5:00 pm, or Closed" }
+      - { name: after-hours, label: After-hours note, type: text }
+      - { name: patient-portal, label: Patient portal link, type: string }
+      - { name: facebook, label: Facebook page, type: string }
+      - { name: website, label: Website address, type: string }
+      - { name: description, label: Description for search engines, type: text }
+      - name: menus
+        label: Menus
+        type: object
+        list: true
+        description: "The menus across the top; each lists the pages in one folder of content/."
+        fields:
+          - { name: label, label: Menu name, type: string }
+          - { name: folder, label: Folder, type: string }
