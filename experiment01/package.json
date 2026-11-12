@@ -1,0 +1,16 @@
+{
+  "name": "rfm-site",
+  "private": true,
+  "description": "Richmond Family Medicine's website. `npm run build` writes the finished site to dist/.",
+  "scripts": {
+    "build": "node build.js",
+    "build:review": "node build.js --base=/reviews/experiment01-review/"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "marked": "18.1.2",
+    "yaml": "2.9.1"
+  }
+}

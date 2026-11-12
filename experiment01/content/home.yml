@@ -1,0 +1,63 @@
+# The home page, top to bottom. The services, clinicians and health topics
+# lists fill themselves in from content/pages/ and content/providers/.
+
+hero:
+  eyebrow: Independent family practice · Richmond, Vermont
+  heading: Comprehensive care for people of all ages
+  text: Richmond Family Medicine provides comprehensive medical care for people of all ages, with an emphasis on evidence-based, preventive medicine and acute and chronic disease management. We are dedicated to promoting the health of individuals, families and our community. We are an independent private practice.
+  image: images/photos/building.jpg
+  imageAlt: Richmond Family Medicine's brick building on West Main Street
+
+# Four shortcuts under the hero. `page` is a page's file name or a full web address.
+shortcuts:
+  - label: Same-day appointments
+    text: Set aside each day for established patients, plus Saturday mornings.
+    page: urgent-care
+    icon: plus
+  - label: Patient Portal
+    text: Request appointments and refills, and message your clinician.
+    page: patient-portal
+    icon: lock
+  - label: Forms
+    text: New patient packets, consent forms and pediatric questionnaires.
+    page: forms-online
+    icon: file
+  - label: Insurance we accept
+    text: Aetna, BCBS, Cigna, Medicaid, Medicare, MVP, Tricare and United.
+    page: policies#billing-policy
+    icon: shield
+
+services:
+  eyebrow: Medical services
+  heading: Everything your family needs from a primary care practice
+  text: All of our doctors and nurse practitioners are trained to care for people of all ages, from newborns to geriatric patients.
+
+about:
+  eyebrow: Our story
+  heading: A true medical home on Main Street
+  text: Three founding partners with established practices in Chittenden County established Richmond Family Medicine, a practice with the goal of being a true "Medical Home" for patients from all walks of life. With a characteristic independent and hands-on approach, the doctors renovated an 1840s brick house and designed and built an addition to accommodate the medical office on Main Street in Richmond.
+  quote: We believe that people want their doctor to know them, to know their family and where they come from.
+  quoteBy: Dr. Hannah Rabin, founding partner
+  badge: Certified Level 3 Patient-Centered Medical Home
+  badgeText: Through the Blueprint for Health initiative and the National Committee for Quality Assurance, the highest level of certification.
+  image: images/photos/nurse-and-patient.jpg
+  imageAlt: A nurse and a patient sharing a laugh
+  link: our-story
+  linkLabel: Read our story
+
+clinicians:
+  eyebrow: Doctors & nurse practitioners
+  heading: Choose your own clinician
+  text: All patients are asked to select a primary care clinician, either a doctor or nurse practitioner, to ensure continuity of care. If that clinician is unavailable, you can always see any of the others for acute care concerns.
+
+topics:
+  eyebrow: Common questions
+  heading: Before you call
+  text: Questions about upper respiratory infections, COVID and tick bites are some of our most common calls.
+
+visit:
+  eyebrow: Visit us
+  heading: Your neighbors in Richmond
+  text: Have a question? Need some information? Please don't hesitate to contact us. We are here as a resource and your neighbor.
+  image: images/photos/waiting-room.jpg
+  imageAlt: The waiting room, with wooden chairs and landscape paintings

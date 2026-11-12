@@ -1,0 +1,53 @@
+# Apache settings for GoDaddy Web Hosting Plus (cPanel, AutoSSL).
+# build.js copies this into dist/. Upload it to public_html with the rest of dist/.
+
+# The site's own "Page not found" page. Its links start from the site root,
+# so it works for a missing address at any depth. GoDaddy overrides this
+# line with a bare "404 Not Found", so the rules below send missing addresses
+# to 404.php, which shows the page. This line stays as a fallback.
+ErrorDocument 404 /404.html
+
+# Each page is its folder's index.html. Naming only that keeps an old
+# index.php (which cPanel would otherwise serve first) from showing instead.
+DirectoryIndex index.html
+
+# Don't list a folder's files (e.g. /forms/) when it has no index.html.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # AutoSSL checks the domain through /.well-known/. Leave it alone so the
+  # certificate keeps renewing.
+  RewriteRule ^\.well-known/ - [L]
+
+  # One address for the site: https://richmondfamilymedicine.org/
+  # www and http:// are sent there. Any other host name (such as a temporary
+  # address before the domain points here) is left alone.
+  RewriteCond %{HTTP_HOST} ^www\.richmondfamilymedicine\.org$ [NC]
+  RewriteRule ^ https://richmondfamilymedicine.org%{REQUEST_URI} [R=301,L]
+  RewriteCond %{HTTP_HOST} ^richmondfamilymedicine\.org$ [NC]
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://richmondfamilymedicine.org%{REQUEST_URI} [R=301,L]
+
+  # Hidden files (such as .DS_Store from a Mac) aren't part of the site.
+  RewriteRule (^|/)\. /404.php [L]
+
+  # Any other address with no file or folder behind it gets the "Page not
+  # found" page, with the 404 status, from 404.php.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ /404.php [L]
+</IfModule>
+
+# Fonts never change, so browsers can keep them. Everything else is checked
+# for changes on each visit, so edits show up straight away.
+AddType font/woff2 .woff2
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/xml image/svg+xml
+</IfModule>

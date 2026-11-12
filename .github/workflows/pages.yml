@@ -1,0 +1,65 @@
+# Publishes this repository's GitHub Pages site, https://tfwvt.github.io/rfm_pub/,
+# on every push to main, or from the Actions tab with "Run workflow".
+#
+# experiment01 has a build step, so it's built first, for its Pages address
+# (/rfm_pub/experiment01/), and the built site takes the place of its source
+# folder. Everything else goes through GitHub's usual Jekyll step, as it did when
+# Pages published the branch directly.
+#
+# Needs Settings → Pages → Source set to "GitHub Actions".
+
+name: GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time. A newer push waits for the one in progress.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Build experiment01 for its Pages address
+        working-directory: experiment01
+        run: |
+          npm ci
+          node build.js --base="/${GITHUB_REPOSITORY#*/}/experiment01/"
+
+      - name: Put the built site in place of experiment01's source
+        run: |
+          mv experiment01/dist "$RUNNER_TEMP/experiment01"
+          rm -rf experiment01
+          mv "$RUNNER_TEMP/experiment01" experiment01
+
+      - uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      - uses: actions/upload-pages-artifact@v5
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

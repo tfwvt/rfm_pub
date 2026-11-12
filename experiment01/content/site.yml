@@ -1,0 +1,87 @@
+# Practice details used on every page: the header, footer and contact boxes.
+# Edit a value, save, and rebuild (see README.md). Keep the quotes around
+# phone numbers and anything containing a colon.
+
+name: Richmond Family Medicine
+description: Richmond Family Medicine provides comprehensive medical care for people of all ages, with an emphasis on evidence-based, preventive medicine and acute and chronic disease management.
+url: https://richmondfamilymedicine.org/
+
+# Shown as a banner across the top of every page when filled in, e.g.
+# "The office is closed Monday, January 1 for the holiday." Leave empty for no banner.
+announcement: ""
+
+phone: "802-434-4123"
+fax: "802-434-3130"
+
+address:
+  street: 30 West Main Street
+  city: Richmond
+  state: VT
+  zip: "05477"
+  mapUrl: https://goo.gl/maps/i71S
+
+hours:
+  - days: Monday – Friday
+    time: 8:00 am – 5:00 pm
+  - days: Saturday
+    time: 9:00 am – noon
+  - days: Sunday
+    time: Closed
+
+afterHours: A doctor or nurse practitioner is available by telephone after hours for urgent medical issues.
+
+portal:
+  url: https://www.medentmobile.com/portal/index.php?practice_id=7C38CDs8
+  label: Patient Portal
+
+facebook: https://www.facebook.com/richmondfamilymedicine
+
+# The three menus in the header. Each item is a page's file name in
+# content/pages/ or content/providers/ (without .md), or a full web address.
+menus:
+  - label: Who We Are
+    items:
+      - page: our-story
+      - page: doctors
+        label: Doctors & NPs
+      - page: specialists
+      - page: staff
+      - page: contact-us
+      - page: careers
+  - label: Medical Services
+    items:
+      - page: physicals-preventive-care
+      - page: pediatrics
+      - page: obstetrics-and-gynecology
+      - page: mental-health-care
+      - page: urgent-care
+      - page: chronic-disease-care
+      - page: nutritional-counseling
+      - page: fitness-and-nutrition-programs
+  - label: Patient Resources
+    items:
+      - page: forms-online
+      - page: education-and-handouts
+      - page: patient-resource-information
+      - page: websites-we-trust
+      - page: policies
+      - page: patient-portal
+
+# Quick links in the footer.
+footerLinks:
+  - page: urgent-care
+  - page: physicals-preventive-care
+    label: Physicals
+  - page: obstetrics-and-gynecology
+    label: Women's Health & GYN Care
+  - page: pediatrics
+  - page: mental-health-care
+    label: Counseling
+  - page: chronic-disease-care
+    label: Diabetes Care
+  - page: nutritional-counseling
+    label: Nutrition
+  - page: contact-us
+  - page: forms-online
+  - page: policies
+    label: Insurance We Accept

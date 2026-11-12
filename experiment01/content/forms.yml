@@ -1,0 +1,264 @@
+# Everything listed on the Forms page.
+# `file` is the PDF's path in static/ (spaces are fine). To add a form, put the
+# PDF in static/documents/ and add a line here. A full web address works too.
+
+groups:
+  - title: Request for records & consent forms
+    files:
+      - label: Release information to/from Richmond Family Medicine
+        file: documents/RFM-Release-Form.pdf
+      - label: Patient Consent Form – Family & Friends
+        file: documents/Patient-Consent-Form-Family-and-Friends.pdf
+      - label: Telemedicine Consent Form
+        file: forms/Telemedicine Consent Form.pdf
+      - label: Flu Vaccine Questionnaire and Consent Form
+        file: documents/fluconsentrev.pdf
+
+  - title: New patients
+    files:
+      - label: New Patient Registration Packet
+        file: documents/Richmond Family Medicine New Patient Packet.pdf
+      - label: New Pediatric Patient Registration Packet
+        file: documents/Richmond Family Medicine New Pediatric Patient Packet.pdf
+
+  - title: Adult wellness visits
+    files:
+      - label: Annual Health History Update
+        file: forms/CPE.pdf
+      - label: Medicare Annual Wellness Visit Questionnaire
+        file: documents/Medicare-AWV-questionnaire.pdf
+
+  - title: Medicare patients
+    files:
+      - label: Medicare Information Packet
+        file: documents/Medicare-Information-Packet.pdf
+
+  - title: Advance directive
+    files:
+      - label: Advance Directive Short Form
+        file: documents/advance_directive_short_form.pdf
+      - label: Advance Directive Long Form
+        file: documents/advance_directive_long_form.pdf
+
+  - title: Worker's compensation
+    files:
+      - label: Worker's Compensation Form
+        file: documents/Workers-Compensation-Form.pdf
+
+  - title: Psychiatric
+    files:
+      - label: Psychiatric Intake Packet
+        file: forms/PSYCH Complete Intake Packet.pdf
+
+  - title: Policies
+    files:
+      - label: Notice of Privacy Practices and Payment Policy
+        file: documents/NPP-Payment-policy-copy.pdf
+
+pediatric:
+  title: Pediatric wellness
+  firstVisitNote: Please fill out these two forms if you haven't before.
+  firstVisit:
+    - label: SEEK Questionnaire
+      file: forms/SEEK Questionnaire.pdf
+    - label: Initial History Questionnaire
+      file: forms/Initial History Questionaire.pdf
+
+  # Age-based questionnaires and educational materials, one row per well-child visit.
+  stages:
+    - name: Infancy
+      visits:
+        - age: 2–5 Day
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Newborn Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Newborn Handout.pdf
+        - age: 1 Month
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Month 1 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Month 1 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 1-4 Mo.pdf
+        - age: 2 Month
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Month 2 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Month 2 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 1-4 Mo.pdf
+        - age: 4 Month
+          # The 4 month questionnaire was missing from the old site. Add it here
+          # once the PDF is in static/forms/Parent Paperwork/.
+          questionnaires: []
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Month 4 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 4-8 Mo.pdf
+        - age: 6 Month
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Month 6 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Month 6 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 4-8 Mo.pdf
+        - age: 9 Month
+          questionnaires:
+            - label: Ages & Stages Questionnaire (8 month)
+              file: forms/Parent Paperwork/Month 9 Questionnaire (actual age 8 months).pdf
+            - label: Ages & Stages Questionnaire (9 month)
+              file: forms/Parent Paperwork/Month 9 Questionnaire (actual age 9 months).pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Month 9 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 8-12 Mo.pdf
+
+    - name: Early childhood
+      visits:
+        - age: 12 Month
+          questionnaires:
+            - label: Ages & Stages Questionnaire
+              file: forms/Parent Paperwork/Month 12 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Month 12 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 12-16 Mo.pdf
+        - age: 15 Month
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Month 15 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Month 15 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 12-16 Mo.pdf
+        - age: 18 Month
+          questionnaires:
+            - label: Ages & Stages Questionnaire
+              file: forms/Parent Paperwork/Month 18 Questionnaire.pdf
+            - label: M-CHAT
+              file: forms/Parent Paperwork/M-Chat Tool.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Month 18 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 16-20 Mo.pdf
+        - age: 2 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 2 Questionnaire.pdf
+            - label: M-CHAT
+              file: forms/Parent Paperwork/M-Chat Tool.pdf
+          # The 2 year Bright Futures handout was missing from the old site.
+          handouts:
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 24-30 Mo.pdf
+        - age: 2½ Year
+          questionnaires:
+            - label: Ages & Stages Questionnaire
+              file: forms/Parent Paperwork/Year 2.5 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 2.5 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 24-30 Mo.pdf
+        - age: 3 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 3 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 3 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 36-48 Mo.pdf
+        - age: 4 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 4 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 4 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 48-60 Mo.pdf
+
+    - name: Middle childhood
+      visits:
+        - age: 5 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 5 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 5 Handout.pdf
+            - label: Ages & Stages Handout
+              file: forms/Parent Paperwork/Intervention Activities 60-66 Mo.pdf
+        - age: 6 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 6 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 6 Handout.pdf
+        - age: 7 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 7 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 7 Handout.pdf
+        - age: 8 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 8 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 8 Handout.pdf
+        - age: 9 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 9 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 9 Handout.pdf
+        - age: 10 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 10 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 10 Handout.pdf
+
+    - name: Adolescence
+      visits:
+        - age: 11–12 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 11-14 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 11-14 Handout.pdf
+        - age: 13–14 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 11-14 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 11-14 Handout.pdf
+        - age: 15–17 Year
+          questionnaires:
+            - label: Bright Futures Previsit Questionnaire
+              file: forms/Parent Paperwork/Year 15-17 Questionnaire.pdf
+          handouts:
+            - label: Bright Futures Handout
+              file: forms/Parent Paperwork/Year 15-17 Handout.pdf
