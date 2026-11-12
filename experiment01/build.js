@@ -20,7 +20,8 @@
  *
  * Writes dist/, ready to upload: index.html, <page>/index.html, 404.html,
  * sitemap.xml, robots.txt and admin/defaults.json (for the editor), plus
- * everything in static/.
+ * everything in static/. Review builds also get cms/, a demo of the editor
+ * that saves nothing.
  *
  * Content links are written from the site root (e.g. `urgent-care`,
  * `documents/RFM-Release-Form.pdf`) and made relative here, so the built
@@ -777,6 +778,83 @@ function render404() {
   return layout({ page: null, title: "Page not found", body, prefix: BASE });
 }
 
+// A look at the website editor (static/admin/index.php) for people without a
+// login: the same page, filled with the built-in values, but nothing on it is
+// saved. There's no form, and "Save changes" only explains that. Review copies
+// only, at cms/. Keep its markup in step with the editor's.
+function renderEditorDemo() {
+  const hours = Array.from({ length: 7 }, (_, i) => site.hours[i] || { days: "", time: "" });
+  const hourLines = hours
+    .map(
+      (h, i) => `<div class="hours-line">
+          <input type="text" value="${esc(h.days)}" maxlength="40" aria-label="Line ${i + 1}: days" placeholder="Days, e.g. Saturday">
+          <input type="text" value="${esc(h.time)}" maxlength="40" aria-label="Line ${i + 1}: hours" placeholder="Hours, e.g. 9:00 am – noon">
+        </div>`
+    )
+    .join("\n        ");
+  const builtIn = '<p class="editor-status">The website shows the built-in version.</p>';
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Banner and hours (demo) | Website editor</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="editor.css">
+</head>
+<body class="editor-page">
+  <header class="editor-bar">
+    <div class="container editor-bar-inner">
+      <p><strong>Website editor</strong> · ${esc(site.name)}</p>
+      <p>Demo · <a href="../">View the website</a></p>
+    </div>
+  </header>
+  <main class="container editor">
+    <h1>Banner and hours</h1>
+    <p class="editor-message is-demo"><strong>This is a demo of the website editor.</strong> Try typing in it: nothing is saved and the website doesn't change. The real editor is at <code>admin/</code> and needs a password.</p>
+    <div class="editor-form">
+      <section class="card editor-section">
+        <h2><label for="announcement">Announcement banner</label></h2>
+        <p class="muted">Shown across the top of every page, e.g. "The office is closed Monday, January 1 for the holiday." Leave it empty for no banner. Web addresses starting with https:// become links.</p>
+        ${builtIn}
+        <textarea id="announcement" rows="3" maxlength="300">${esc(site.announcement || "")}</textarea>
+      </section>
+
+      <section class="card editor-section">
+        <h2>Office hours</h2>
+        <p class="muted">Shown in the footer of every page, beside each page, and on the home and Contact Us pages. One line for each group of days, written like the examples, e.g. "Monday – Friday" and "8:00 am – 5:00 pm", or "Closed". Search engines read hours written that way. Leave unused lines empty.</p>
+        ${builtIn}
+        <div class="hours-line hours-head" aria-hidden="true"><span>Days</span><span>Hours</span></div>
+        ${hourLines}
+      </section>
+
+      <section class="card editor-section">
+        <h2><label for="afterHours">After-hours note</label></h2>
+        <p class="muted">Shown under the office hours beside each page, and on the home and Contact Us pages.</p>
+        ${builtIn}
+        <textarea id="afterHours" rows="3" maxlength="300">${esc(site.afterHours || "")}</textarea>
+      </section>
+
+      <p class="editor-actions"><button class="button" type="button" popovertarget="demo-saved">Save changes</button> <a class="button button-ghost" href="./">Undo unsaved changes</a></p>
+    </div>
+
+    <div class="demo-note" id="demo-saved" popover>
+      <p><strong>Nothing was saved: this is the demo.</strong></p>
+      <p>In the real editor, saving updates every page straight away, and the change is listed under Recent changes with who made it and when.</p>
+      <button class="button button-small" type="button" popovertarget="demo-saved" popovertargetaction="hide">OK</button>
+    </div>
+
+    <section class="editor-history">
+      <h2>Recent changes</h2>
+      <p class="muted">Nothing has been changed here yet. Built-in hours: ${esc(site.hours.map((h) => `${h.days}: ${h.time}`).join("; "))}.</p>
+    </section>
+  </main>
+</body>
+</html>
+`;
+}
+
 // ---------- Write dist/ ----------
 
 const write = (rel, text) => {
@@ -827,6 +905,13 @@ write(
     2
   ) + "\n"
 );
+
+// The editor demo, for review copies only. It has its own copy of the editor's
+// styles, because admin/ is behind a password on GoDaddy.
+if (REVIEW) {
+  write("cms/index.html", renderEditorDemo());
+  fs.copyFileSync(path.join(STATIC, "admin/admin.css"), path.join(DIST, "cms/editor.css"));
+}
 
 if (!REVIEW) {
   const base = site.url.replace(/\/?$/, "/");

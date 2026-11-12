@@ -42,6 +42,8 @@ The announcement banner, the office hours and the after-hours note can be change
 - review copy: <https://richmondfamilymedicine.org/reviews/experiment01-review/admin/>
 - real site, once it's live: <https://richmondfamilymedicine.org/admin/>
 
+To show someone the editor without a login, use the demo at `cms/`: the same page, which saves nothing (<https://richmondfamilymedicine.org/reviews/experiment01-review/cms/>, or <https://tfwvt.github.io/rfm_pub/experiment01/cms/>). Only review builds include it.
+
 Changes show on every page as soon as they're saved. The editor keeps a list of recent changes (who and when), and any of them can be brought back. Each section also has **Go back to the built-in version**, which returns it to what's in `content/site.yml`.
 
 **First time, for each copy:** upload the site, then in cPanel open **Directory Privacy**, go to the `admin` folder (`public_html/reviews/experiment01-review/admin` for the review copy, `public_html/admin` for the real site), choose **Password protect this directory**, save, and add a user for each person who edits, with a long password. Until that's done, the editor shows "The editor is locked" and changes nothing.

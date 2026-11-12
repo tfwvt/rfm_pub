@@ -198,3 +198,29 @@
     display: none;
   }
 }
+
+/* The editor demo (cms/, written by build.js), which saves nothing. */
+
+.editor-message.is-demo {
+  background: var(--sand);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.demo-note {
+  max-width: min(440px, calc(100vw - 32px));
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: var(--shadow-hover);
+}
+
+.demo-note::backdrop {
+  background: rgb(25 50 31 / 0.3);
+}
+
+.demo-note p {
+  margin: 0 0 12px;
+}
