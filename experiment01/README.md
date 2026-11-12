@@ -14,6 +14,7 @@ Every page, clinician biography, form and handout from richmondfamilymedicine.or
 | `content/providers/*.md` | **Every doctor and nurse practitioner**: name, credentials, photo, education and biography |
 | `content/forms.yml` | Everything on the Forms page, including the well-child questionnaire table |
 | `static/` | Copied into the site as it is: `styles.css` (the design), `site.js` (the menus), `images/`, `fonts/`, the PDFs in `documents/` and `forms/`, and `.htaccess` (web server settings, see [Hosting](#hosting)) |
+| `static/admin/` | The online editor for the banner, hours and after-hours note (see [Editing the banner and hours](#editing-the-banner-and-hours)) |
 | `build.js` | Builds the finished site into `dist/` |
 | `dist/` | The built site, ready to upload. Generated; not in git |
 | `../.pages.yml` | Settings for the Pages CMS editor, at the repository root |
@@ -25,13 +26,41 @@ The web addresses and PDF paths match the old site's (`/urgent-care`, `/document
 
 | To… | Edit |
 | --- | --- |
-| Post a closure or other notice on every page | `announcement:` in `content/site.yml` (empty it to remove the banner) |
-| Change hours, phone or the portal link | `content/site.yml` (every page picks it up) |
+| Post a closure or other notice on every page | the [online editor](#editing-the-banner-and-hours), or `announcement:` in `content/site.yml` (empty it to remove the banner) |
+| Change the hours or the after-hours note | the [online editor](#editing-the-banner-and-hours), or `content/site.yml` |
+| Change the phone number or the portal link | `content/site.yml` (every page picks it up) |
 | Edit a page | its file in `content/pages/` |
 | Add a clinician | copy a file in `content/providers/`, rename it (e.g. `jane-smith-md.md`), edit it, and put a photo in `static/images/providers/` |
 | Remove a clinician | delete their file in `content/providers/` and remove their name from `content/pages/our-story.md` |
 | Add a form | put the PDF in `static/documents/` and add a line to `content/forms.yml` |
 | Add a page | create `content/pages/new-page.md` and add `- page: new-page` to a menu in `content/site.yml` |
+
+## Editing the banner and hours
+
+The announcement banner, the office hours and the after-hours note can be changed straight on the website, without building or uploading. The editor is at `admin/` in each copy of the site:
+
+- review copy: <https://richmondfamilymedicine.org/reviews/experiment01-review/admin/>
+- real site, once it's live: <https://richmondfamilymedicine.org/admin/>
+
+Changes show on every page as soon as they're saved. The editor keeps a list of recent changes (who and when), and any of them can be brought back. Each section also has **Go back to the built-in version**, which returns it to what's in `content/site.yml`.
+
+**First time, for each copy:** upload the site, then in cPanel open **Directory Privacy**, go to the `admin` folder (`public_html/reviews/experiment01-review/admin` for the review copy, `public_html/admin` for the real site), choose **Password protect this directory**, save, and add a user for each person who edits, with a long password. Until that's done, the editor shows "The editor is locked" and changes nothing.
+
+**Keep in mind:**
+
+- Changes made in the editor live only on that copy of the site, not in `content/site.yml` or GitHub. The GitHub Pages copy, and a new copy of the site, show the built-in versions.
+- Once a section has been changed in the editor, changing it in `content/site.yml` has no effect on that copy until someone chooses **Go back to the built-in version**.
+- Uploading never touches the editor's changes. They're in `edits/` and `admin/data/` on the server, which aren't part of `dist/`. Don't delete those folders.
+- Never upload an `.htaccess` file into `admin/`. cPanel keeps the password settings there, and replacing it switches the editor off.
+
+**How it works:** the editor (`static/admin/index.php`) saves each changed section as a small HTML file in `edits/`, and every page pulls those in with Apache's server-side includes. Each page also carries its built-in version, which shows for any section that hasn't been changed, and everywhere if includes are switched off. `build.js` and `static/admin/render.php` write the same HTML for these sections, so a change to how they look goes in both.
+
+**How it's kept safe:**
+
+- cPanel's password is the lock, with one login per person. The editor won't work in a folder without one.
+- It can change only these three sections, as plain text with length limits. Everything typed is escaped, so it can't add HTML, scripts or server-side includes. Web addresses starting with `https://` become links in the banner.
+- Every form carries a secret token, so another website can't submit changes on someone's behalf, and no other site can show the editor in a frame.
+- Its saved values and history are in `admin/data/`, which the web can't reach, even with the password.
 
 ## Editing with Pages CMS
 
@@ -89,7 +118,7 @@ To preview, serve the folder that contains `rfm_pub` (e.g. `python3 -m http.serv
 
 ## Hosting
 
-The site is hosted on GoDaddy Web Hosting Plus (2-year plan): cPanel, an Apache web server and a free AutoSSL certificate. GoDaddy serves files as they are (apart from `404.php`, below) and doesn't run the build, so the site is built here and `dist/` is uploaded.
+The site is hosted on GoDaddy Web Hosting Plus (2-year plan): cPanel, an Apache web server and a free AutoSSL certificate. GoDaddy serves files as they are (apart from `404.php` and the [editor](#editing-the-banner-and-hours)) and doesn't run the build, so the site is built here and `dist/` is uploaded.
 
 **Review copy:** while the site is being developed, it's at <https://richmondfamilymedicine.org/reviews/experiment01-review/>, alongside the old site. Build it with `npm run build:review` and upload the contents of `dist/` to `public_html/reviews/experiment01-review/`. That build:
 
@@ -104,16 +133,18 @@ The site is hosted on GoDaddy Web Hosting Plus (2-year plan): cPanel, an Apache 
 1. `npm run build`.
 2. Upload everything *inside* `dist/` (not the folder itself) to `public_html`, with cPanel's File Manager or by SFTP. The simplest way is to zip the contents of `dist/`, upload the zip in File Manager and choose Extract.
 3. Make sure `.htaccess` went up too. It's a hidden file: Finder shows hidden files with Cmd+Shift+. and File Manager shows them under Settings → Show Hidden Files.
-4. Uploading never deletes anything. If a page, photo or PDF was removed or renamed, delete the old one from `public_html` as well.
+4. Uploading never deletes anything. If a page, photo or PDF was removed or renamed, delete the old one from `public_html` as well. Leave `edits/` and `admin/data/` alone: they hold the editor's changes.
+5. The first time only: password-protect `admin/` in cPanel (see [Editing the banner and hours](#editing-the-banner-and-hours)).
 
 The first time, replacing the old site: move the old site's files out of `public_html` (into a backup folder beside it) before uploading. Leave `.well-known/` and `reviews/` where they are. The new `.htaccess` replaces the old one.
 
 **What `.htaccess` does** (it's `static/.htaccess`, copied into `dist/` by the build):
 
-- Shows the site's "Page not found" page for any missing address, with the "not found" status. That page's links start from the site root, so it works at any depth. GoDaddy replaces Apache's own error pages with a bare "404 Not Found" line, whatever `.htaccess` says, so missing addresses go to `404.php` (in `static/`), a three-line script that sends `404.html` with the 404 status. It's the site's only server-side code.
+- Shows the site's "Page not found" page for any missing address, with the "not found" status. That page's links start from the site root, so it works at any depth. GoDaddy replaces Apache's own error pages with a bare "404 Not Found" line, whatever `.htaccess` says, so missing addresses go to `404.php` (in `static/`), a short script that sends `404.html` with the 404 status, with any sections changed in the editor filled in.
 - Serves each folder's `index.html` and nothing else, so an old `index.php` left behind can't show instead (cPanel normally tries `index.php` first).
 - Makes `https://richmondfamilymedicine.org/` the one address: `http://` and `www.` are redirected there (301). Other host names, such as a temporary address before the domain points here, aren't redirected.
 - Leaves `/.well-known/` alone so AutoSSL can keep renewing the certificate.
+- Turns on server-side includes for pages, so they show the sections changed in the editor, and sends `admin/` to the editor.
 - Blocks file listings for folders like `/forms/`, and answers "not found" for hidden files such as `.DS_Store`.
 - Lets browsers keep the fonts for a year and compresses pages. Pages, styles, photos and PDFs are checked for changes on every visit, so edits show up straight away.
 
@@ -121,7 +152,7 @@ Old addresses keep working: `/urgent-care` redirects to `/urgent-care/`, and PDF
 
 **The domain:** the old site and the review copy are both on this hosting account, so going live needs no DNS change, and the certificate already covers `richmondfamilymedicine.org` and `www.`. Leave the DNS as it is. In particular, keep the `MX` records (`aspmx.l.google.com` and the `alt` ones) and the `TXT` records: they carry the practice's Google Workspace email.
 
-**GitHub Pages test copy:** every push to `main` also publishes the site at <https://tfwvt.github.io/rfm_pub/experiment01/>, built by `.github/workflows/pages.yml` at the repository root (Settings → Pages → Source must be "GitHub Actions"). It's for quick checks. Like the review copy, it's hidden from search engines. `.htaccess` and `404.php` do nothing on GitHub Pages, so a missing page shows GitHub's own "not found" page there. The workflow publishes the rest of the repository the way GitHub Pages always has.
+**GitHub Pages test copy:** every push to `main` also publishes the site at <https://tfwvt.github.io/rfm_pub/experiment01/>, built by `.github/workflows/pages.yml` at the repository root (Settings → Pages → Source must be "GitHub Actions"). It's for quick checks. Like the review copy, it's hidden from search engines. `.htaccess`, `404.php` and the editor do nothing on GitHub Pages, so a missing page shows GitHub's own "not found" page there, and pages show the built-in banner and hours. The workflow publishes the rest of the repository the way GitHub Pages always has.
 
 **Pages CMS edits:** saving in Pages CMS commits to GitHub; it doesn't update GoDaddy. Each edit goes live only when someone builds and uploads again. A GitHub Actions workflow could do that on every commit (build, then upload by SFTP with the login stored as a GitHub secret).
 

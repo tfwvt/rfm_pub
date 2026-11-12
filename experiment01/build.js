@@ -19,7 +19,8 @@
  *   static/                  styles, script, images and PDFs, copied as they are
  *
  * Writes dist/, ready to upload: index.html, <page>/index.html, 404.html,
- * sitemap.xml and robots.txt, plus everything in static/.
+ * sitemap.xml, robots.txt and admin/defaults.json (for the editor), plus
+ * everything in static/.
  *
  * Content links are written from the site root (e.g. `urgent-care`,
  * `documents/RFM-Release-Form.pdf`) and made relative here, so the built
@@ -252,8 +253,91 @@ const a = site.address;
 const addressLine = `${a.street}, ${a.city}, ${a.state} ${a.zip}`;
 const year = new Date().getFullYear();
 
+// ---------- Sections edited at admin/ ----------
+//
+// The announcement, the office hours and the after-hours note can be changed on
+// GoDaddy with the editor in static/admin/. It saves each changed section as a
+// small HTML file in edits/, which the pages pull in with Apache's server-side
+// includes. Each page also carries the built-in version from site.yml, which
+// shows until a section is changed in the editor, and on hosts without includes
+// such as GitHub Pages. static/admin/render.php writes the same HTML as the
+// functions below for the same values, so change the two together.
+
+function editable(name, html) {
+  const file = `${BASE}edits/${name}.html`;
+  return `<!--#if expr="-F '%{DOCUMENT_ROOT}${file}'" --><!--#include virtual="${file}" --><!--#else -->${html}<!--#endif -->`;
+}
+
+const announcementHtml = () => (site.announcement ? `<div class="announcement">${md.parseInline(site.announcement)}</div>` : "");
+
+const hoursRows = () => site.hours.map((h) => `<div><dt>${esc(h.days)}</dt><dd>${esc(h.time)}</dd></div>`).join("");
+
 function hoursList(cls = "hours") {
-  return `<dl class="${cls}">${site.hours.map((h) => `<div><dt>${esc(h.days)}</dt><dd>${esc(h.time)}</dd></div>`).join("")}</dl>`;
+  return `<dl class="${cls}">${editable("hours", hoursRows())}</dl>`;
+}
+
+const afterHours = () => editable("after-hours", esc(site.afterHours));
+
+const DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+const COUNTS = ["", "one day", "two days", "three days", "four days", "five days", "six days", "seven days"];
+
+// "Open six days a week", counted from the lines that aren't "Closed". Days can
+// be single ("Saturday"), ranges ("Monday – Friday") or lists ("Monday, Wednesday").
+// Anything else gives "Office hours".
+function openDaysHeading(hours) {
+  const open = new Set();
+  for (const h of hours) {
+    if (/closed/i.test(h.time)) continue;
+    for (const part of String(h.days).toLowerCase().split(/\s*(?:,|&|\band\b)\s*/)) {
+      const ends = part.split(/\s*[–-]\s*/).map((d) => DAYS.indexOf(d.trim()));
+      if (ends.length > 2 || ends.includes(-1)) return "Office hours";
+      const [from, to = from] = ends;
+      for (let d = from; ; d = (d + 1) % 7) {
+        open.add(d);
+        if (d === to) break;
+      }
+    }
+  }
+  return open.size ? `Open ${COUNTS[open.size]} a week` : "Office hours";
+}
+
+// The home page card: "Open six days a week" and the days that are open.
+const hoursSummary = () =>
+  `<strong>${openDaysHeading(site.hours)}</strong>${site.hours
+    .filter((x) => !/closed/i.test(x.time))
+    .map((x) => `<span>${esc(x.days)} · ${esc(x.time)}</span>`)
+    .join("")}`;
+
+// The hours for search engines, e.g. "Mo-Fr 08:00-17:00". Lines in another
+// form are left out.
+function openingHours(hours) {
+  const days = { monday: "Mo", tuesday: "Tu", wednesday: "We", thursday: "Th", friday: "Fr", saturday: "Sa", sunday: "Su" };
+  const to24 = (t) => {
+    const m = String(t).trim().toLowerCase().match(/^(noon|(\d{1,2})(?::(\d\d))?\s*(am|pm))$/);
+    if (!m) return null;
+    if (m[1] === "noon") return "12:00";
+    let hr = Number(m[2]) % 12;
+    if (m[4] === "pm") hr += 12;
+    return `${String(hr).padStart(2, "0")}:${m[3] || "00"}`;
+  };
+  return hours
+    .map((x) => {
+      const d = String(x.days).toLowerCase().split(/\s*[–-]\s*/).map((s) => days[s.trim()]);
+      const [from, to] = String(x.time).split(/\s+[–-]\s+/).map(to24);
+      return d.every(Boolean) && from && to ? `${d.join("-")} ${from}-${to}` : null;
+    })
+    .filter(Boolean);
+}
+
+// The practice's identifier in search engine data, so the hours (a separate
+// block, because they can be edited) attach to the rest of its details.
+const practiceId = () => `${site.url.replace(/\/?$/, "/")}#practice`;
+
+const jsonLdScript = (data) => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`;
+
+function hoursData() {
+  const hours = openingHours(site.hours);
+  return hours.length ? jsonLdScript({ "@context": "https://schema.org", "@id": practiceId(), openingHours: hours }) : "";
 }
 
 // Which menu (Who We Are, Medical Services…) a page belongs to, for the breadcrumb.
@@ -278,8 +362,7 @@ function header(current) {
         </li>`;
     })
     .join("");
-  const banner = site.announcement ? `<div class="announcement">${md.parseInline(site.announcement)}</div>` : "";
-  return `${banner}
+  return `${editable("announcement", announcementHtml())}
   <div class="topbar">
     <div class="container topbar-inner">
       <a href="${esc(a.mapUrl)}">${icon("pin")}${esc(addressLine)}</a>
@@ -340,7 +423,7 @@ function contactCard() {
       <p class="muted small">Fax ${esc(site.fax)}</p>
       <h3>Office hours</h3>
       ${hoursList()}
-      <p class="small">${esc(site.afterHours)}</p>
+      <p class="small">${afterHours()}</p>
       <h3>Location</h3>
       <p><a href="${esc(a.mapUrl)}">${esc(a.street)}<br>${esc(a.city)}, ${esc(a.state)} ${esc(a.zip)}</a></p>
       <a class="button button-block" href="${esc(site.portal.url)}">${icon("lock")}${esc(site.portal.label)}</a>
@@ -408,7 +491,7 @@ const INCLUDES = {
   },
   contact() {
     return `<h2>Office hours</h2>${hoursList("hours hours-wide")}
-      <p>${esc(site.afterHours)}</p>
+      <p>${afterHours()}</p>
       <figure class="wide-figure">${img(home.hero.image, home.hero.imageAlt)}</figure>
       <p><a class="button" href="${esc(a.mapUrl)}">${icon("pin")}Get directions</a></p>`;
   },
@@ -446,6 +529,7 @@ function layout({ page, title, description, body, prefix, extraHead = "" }) {
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!--#config errmsg="" -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${esc(fullTitle)}</title>
   <meta name="description" content="${esc(description || site.description)}">${REVIEW ? `\n  <meta name="robots" content="noindex, nofollow">` : ""}
@@ -595,10 +679,7 @@ function renderHome() {
           ${img(h.image, h.imageAlt, { eager: true, cls: "hero-img" })}
           <div class="hero-card">
             ${icon("clock")}
-            <div><strong>Open six days a week</strong>${site.hours
-              .filter((x) => !/closed/i.test(x.time))
-              .map((x) => `<span>${esc(x.days)} · ${esc(x.time)}</span>`)
-              .join("")}</div>
+            <div>${editable("hours-summary", hoursSummary())}</div>
           </div>
         </div>
       </div>
@@ -655,40 +736,25 @@ function renderHome() {
           </ul>
           <h3>Office hours</h3>
           ${today}
-          <p class="muted">${esc(site.afterHours)}</p>
+          <p class="muted">${afterHours()}</p>
           <a class="button" href="contact-us">More ways to reach us${icon("arrow")}</a>
         </div>
         <div class="visit-media">${img(home.visit.image, home.visit.imageAlt, { cls: "rounded-img" })}</div>
       </div>
     </section>`;
 
-  // Lets search engines show the address, phone and hours.
-  const days = { monday: "Mo", tuesday: "Tu", wednesday: "We", thursday: "Th", friday: "Fr", saturday: "Sa", sunday: "Su" };
-  const to24 = (t) => {
-    const m = String(t).trim().toLowerCase().match(/^(noon|(\d{1,2})(?::(\d\d))?\s*(am|pm))$/);
-    if (!m) return null;
-    if (m[1] === "noon") return "12:00";
-    let hr = Number(m[2]) % 12;
-    if (m[4] === "pm") hr += 12;
-    return `${String(hr).padStart(2, "0")}:${m[3] || "00"}`;
-  };
-  const openingHours = site.hours
-    .map((x) => {
-      const d = String(x.days).toLowerCase().split(/\s*[–-]\s*/).map((s) => days[s.trim()]);
-      const [from, to] = String(x.time).split(/\s+[–-]\s+/).map(to24);
-      return d.every(Boolean) && from && to ? `${d.join("-")} ${from}-${to}` : null;
-    })
-    .filter(Boolean);
+  // Lets search engines show the address, phone and hours. The hours are a
+  // separate block with the same "@id", because they can be edited.
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "MedicalClinic",
+    "@id": practiceId(),
     name: site.name,
     description: site.description,
     url: site.url,
     telephone: site.phone,
     faxNumber: site.fax,
     address: { "@type": "PostalAddress", streetAddress: a.street, addressLocality: a.city, addressRegion: a.state, postalCode: String(a.zip), addressCountry: "US" },
-    openingHours,
     sameAs: [site.facebook].filter(Boolean),
   };
   return layout({
@@ -697,7 +763,7 @@ function renderHome() {
     description: site.description,
     body,
     prefix: "",
-    extraHead: `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, "\\u003c")}</script>`,
+    extraHead: `${jsonLdScript(jsonLd)}\n  ${editable("hours-data", hoursData())}`,
   });
 }
 
@@ -727,8 +793,8 @@ if (REVIEW) {
   // keep the review copy (pages and PDFs) out of search results.
   const htaccess = path.join(DIST, ".htaccess");
   let text = fs.readFileSync(htaccess, "utf8");
-  for (const file of ["404.html", "404.php"]) {
-    const fromRoot = ` /${file}`; // "ErrorDocument 404 /404.html", "RewriteRule ^ /404.php [L]"
+  for (const file of ["404.html", "404.php", "admin/index.php"]) {
+    const fromRoot = ` /${file}`; // "ErrorDocument 404 /404.html", "RewriteRule ^ /404.php [L,NS]"
     if (!text.includes(fromRoot)) warn(`static/.htaccess: nothing points at /${file} to change to ${BASE}${file}`);
     text = text.replaceAll(fromRoot, ` ${BASE}${file}`);
   }
@@ -743,6 +809,24 @@ write("index.html", renderHome());
 for (const p of pages) write(`${p.slug}/index.html`, renderPage(p));
 for (const p of providers) write(`${p.slug}/index.html`, renderProvider(p));
 write("404.html", render404());
+
+// The built-in versions of the sections the editor changes (see "Sections edited
+// at admin/" above), for admin/index.php.
+if (site.hours.length > 7) warn(`content/site.yml: ${site.hours.length} lines of hours; the editor only has room for 7`);
+write(
+  "admin/defaults.json",
+  JSON.stringify(
+    {
+      base: BASE,
+      practiceId: practiceId(),
+      announcement: String(site.announcement || ""),
+      hours: site.hours.map((h) => ({ days: String(h.days), time: String(h.time) })),
+      afterHours: String(site.afterHours || ""),
+    },
+    null,
+    2
+  ) + "\n"
+);
 
 if (!REVIEW) {
   const base = site.url.replace(/\/?$/, "/");

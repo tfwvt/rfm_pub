@@ -14,6 +14,16 @@ DirectoryIndex index.html
 # Don't list a folder's files (e.g. /forms/) when it has no index.html.
 Options -Indexes
 
+# Pages pull in the sections changed with the editor at admin/ (the
+# announcement, hours and after-hours note) from edits/, using server-side
+# includes. Each page also carries its built-in version, which shows until a
+# section is changed, or if includes are ever turned off.
+AddOutputFilter INCLUDES .html
+# GoDaddy's cPanel sets includes to Apache's old expression syntax, which can't
+# check whether an edited section exists, so every section came out empty.
+# Use the current syntax.
+SSILegacyExprParser off
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
@@ -30,14 +40,20 @@ Options -Indexes
   RewriteCond %{HTTPS} !=on
   RewriteRule ^ https://richmondfamilymedicine.org%{REQUEST_URI} [R=301,L]
 
+  # The editor. Its folder must be password-protected in cPanel (Directory
+  # Privacy); it refuses to work otherwise.
+  RewriteRule ^admin/$ /admin/index.php [L]
+
   # Hidden files (such as .DS_Store from a Mac) aren't part of the site.
-  RewriteRule (^|/)\. /404.php [L]
+  # NS: not for the includes' own lookups, so a missing edits/ file is never
+  # replaced by the whole "Page not found" page.
+  RewriteRule (^|/)\. /404.php [L,NS]
 
   # Any other address with no file or folder behind it gets the "Page not
   # found" page, with the 404 status, from 404.php.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^ /404.php [L]
+  RewriteRule ^ /404.php [L,NS]
 </IfModule>
 
 # Fonts never change, so browsers can keep them. Everything else is checked

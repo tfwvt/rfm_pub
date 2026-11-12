@@ -1,0 +1,200 @@
+/* The website editor (admin/index.php). Builds on the site's styles.css. */
+
+.editor-page {
+  background: var(--cream);
+}
+
+.editor-bar {
+  background: var(--green-900);
+  color: #dfe9dc;
+}
+
+.editor-bar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 24px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.editor-bar p {
+  margin: 0;
+}
+
+.editor-bar a {
+  color: var(--white);
+}
+
+.editor {
+  max-width: 820px;
+  padding-top: 32px;
+  padding-bottom: 64px;
+}
+
+.editor h1 {
+  margin-bottom: 24px;
+}
+
+.editor-section {
+  margin-bottom: 20px;
+}
+
+.editor-section h2 {
+  margin-top: 0;
+  font-size: 1.35rem;
+}
+
+.editor-section .muted {
+  margin-top: 0;
+}
+
+.editor textarea,
+.editor input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #b9b2a3;
+  border-radius: var(--radius-small);
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+}
+
+.editor textarea {
+  resize: vertical;
+}
+
+.hours-line {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.hours-head {
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.editor-status {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.editor-status.is-changed {
+  color: var(--green-700);
+  font-weight: 600;
+}
+
+.editor-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--maple-700);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.editor-message {
+  margin: 0 0 20px;
+  padding: 14px 18px;
+  border-radius: var(--radius-small);
+  background: var(--green-100);
+  color: var(--green-900);
+}
+
+.editor-message.is-warning,
+.editor-message.is-error {
+  background: #fbe9dc;
+  color: #6b3010;
+}
+
+.editor-message p,
+.editor-message ul {
+  margin: 0;
+}
+
+.editor-message ul {
+  margin-top: 6px;
+  padding-left: 20px;
+}
+
+.editor-history {
+  margin-top: 40px;
+}
+
+.editor-history table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.editor-history th,
+.editor-history td {
+  padding: 8px 10px 8px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.editor-history td:nth-child(2),
+.editor-history td:last-child {
+  white-space: nowrap;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.editor input::placeholder {
+  color: #6b736c;
+}
+
+@media (min-width: 561px) {
+  .editor-history td:first-child {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 560px) {
+  .editor {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .editor-section {
+    padding: 20px 18px;
+  }
+
+  /* Each line's days above its hours, lines spaced apart. */
+  .hours-line {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .hours-head {
+    display: none;
+  }
+
+  .editor-history th:nth-child(3),
+  .editor-history td:nth-child(3) {
+    display: none;
+  }
+}
