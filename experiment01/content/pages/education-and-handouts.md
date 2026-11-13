@@ -30,5 +30,5 @@ There are many printed materials we share with our patients on a daily basis to 
 
 ## Other resources and handouts
 
-- **[Vermont Advance Directive (Short Form)](https://www.vtethicsnetwork.org/forms/advance_directive_short_form.pdf)**
-- **[Vermont Advance Directive (Long Form)](https://www.vtethicsnetwork.org/forms/advance_directive_long_form.pdf)**
+- **[Vermont Advance Directive (Short Form)](https://vtethicsnetwork.org/forms)**
+- **[Vermont Advance Directive (Long Form)](https://vtethicsnetwork.org/forms)**
